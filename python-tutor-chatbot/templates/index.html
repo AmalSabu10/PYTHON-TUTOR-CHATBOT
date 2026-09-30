@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Python Tutor AI</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22><text y=%2220%22 font-size=%2220%22>🐍</text></svg>" />
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- ============ Sidebar ============ -->
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48" width="30" height="30">
+            <path d="M24 4c-3.6 0-6.8.3-9.4 1-2.6.7-3.6 1.9-3.6 4.1v5.4h13v1.8H7.2C4.6 16.3 2 18.9 2 24s2.6 7.7 5.2 7.7h4.4V26c0-3.3 2.9-6.1 6.4-6.1h11.7c2.9 0 5.2-2.4 5.2-5.3V9.1c0-2.2-1-3.4-3.6-4.1C28.8 4.3 25.6 4 22 4h2z" fill="#3776AB"/>
+            <path d="M24 44c3.6 0 6.8-.3 9.4-1 2.6-.7 3.6-1.9 3.6-4.1v-5.4h-13v-1.8h16.8c2.6 0 5.2-2.6 5.2-7.7s-2.6-7.7-5.2-7.7h-4.4V22c0 3.3-2.9 6.1-6.4 6.1H18.3c-2.9 0-5.2 2.4-5.2 5.3v5.5c0 2.2 1 3.4 3.6 4.1 2.6.7 5.8 1 9.4 1h-2z" fill="#FFD43B"/>
+          </svg>
+        </span>
+        <div>
+          <h1>Python Tutor AI</h1>
+          <p class="subtitle">Your personal Python learning assistant</p>
+        </div>
+      </div>
+
+      <button id="clear-chat-btn" class="clear-btn" type="button">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2m3 0-1 14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2L4 6"/></svg>
+        Clear conversation
+      </button>
+
+      <div class="sidebar-section">
+        <h2>Try asking</h2>
+        <ul class="suggestions" id="suggestion-list">
+          <li data-prompt="What is a variable?">What is a variable?</li>
+          <li data-prompt="Explain loops in Python">Explain loops in Python</li>
+          <li data-prompt="What is inheritance?">What is inheritance?</li>
+          <li data-prompt="Explain the difference between a list and a tuple.">List vs. tuple</li>
+          <li data-prompt="What is a decorator in Python?">What is a decorator?</li>
+          <li data-prompt="Write a Python program to check whether a number is prime.">Check if a number is prime</li>
+        </ul>
+      </div>
+
+      <div class="sidebar-section level-section">
+        <h2>Explanation level</h2>
+        <div class="level-selector" id="level-selector" role="radiogroup" aria-label="Explanation level">
+          <button class="level-btn active" data-level="simple" role="radio" aria-checked="true" type="button">
+            Simple
+          </button>
+          <button class="level-btn" data-level="intermediate" role="radio" aria-checked="false" type="button">
+            Intermediate
+          </button>
+          <button class="level-btn" data-level="technical" role="radio" aria-checked="false" type="button">
+            Technical
+          </button>
+        </div>
+        <p class="level-hint" id="level-hint">Everyday language and simple examples.</p>
+      </div>
+    </aside>
+
+    <!-- ============ Main chat column ============ -->
+    <main class="chat-column">
+
+      <header class="chat-header">
+        <button id="sidebar-toggle" class="icon-btn sidebar-toggle" type="button" aria-label="Toggle menu">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <div>
+          <h2>Python Tutor AI</h2>
+          <span class="header-subtitle">Ask anything, from <code>print()</code> to async generators.</span>
+        </div>
+      </header>
+
+      <div class="chat-area" id="chat-area">
+        <!-- Welcome screen (shown when there is no conversation yet) -->
+        <div class="welcome-screen" id="welcome-screen">
+          <div class="welcome-icon">🐍</div>
+          <h3>Let's learn some Python</h3>
+          <p>Pick an explanation level on the left, then ask a question below — or try one of these:</p>
+          <div class="welcome-prompts">
+            <button class="prompt-chip" data-prompt="What is a variable?">What is a variable?</button>
+            <button class="prompt-chip" data-prompt="Explain loops in Python">Explain loops in Python</button>
+            <button class="prompt-chip" data-prompt="What is inheritance?">What is inheritance?</button>
+            <button class="prompt-chip" data-prompt="Explain the difference between multithreading and multiprocessing.">Multithreading vs. multiprocessing</button>
+          </div>
+        </div>
+
+        <!-- Chat messages are appended here by script.js -->
+        <div class="messages" id="messages"></div>
+
+        <!-- Typing indicator -->
+        <div class="typing-indicator" id="typing-indicator" hidden>
+          <div class="avatar bot-avatar">🐍</div>
+          <div class="typing-bubble">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </div>
+
+      <form class="input-area" id="chat-form">
+        <div class="input-wrapper">
+          <textarea
+            id="message-input"
+            placeholder="Ask me anything about Python..."
+            rows="1"
+            maxlength="4000"
+            aria-label="Your Python question"
+          ></textarea>
+          <button type="submit" id="send-btn" class="send-btn" aria-label="Send message">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+          </button>
+        </div>
+        <p class="input-hint">Enter to send &middot; Shift+Enter for a new line</p>
+      </form>
+
+    </main>
+  </div>
+
+  <!-- Toast for copy confirmation -->
+  <div id="toast" class="toast" hidden>Copied!</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+  <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
